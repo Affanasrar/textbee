@@ -14,30 +14,36 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Set up Java (required for Android builds)
+      # 2. Set up Java
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      # 3. Debug project structure
-      - name: Show project files
-        run: ls -R
+      # 3. Create google-services.json
+      - name: Create google-services.json
+        run: |
+          mkdir -p android/app/src/dev
+          echo '${{ secrets.GOOGLE_SERVICES_JSON_DEV }}' > android/app/src/dev/google-services.json
 
-      # 4. Make gradlew executable (Now correctly points to android/gradlew)
+      # 4. Create debug keystore
+      - name: Create debug keystore
+        run: |
+          mkdir -p ~/.android
+          keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+
+      # 5. Make gradlew executable
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
-      # 5. Build APK (Debug)
-      # Added 'cd android' to ensure we run inside the correct directory
+      # 6. Build APK (Debug)
       - name: Build Debug APK
         run: |
           cd android
           ./gradlew assembleDebug
 
-      # 6. Upload APK artifact
-      # Updated path to include the android/ prefix
+      # 7. Upload APK artifact
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
