@@ -48,4 +48,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-debug-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          # This pattern will find the apk regardless of the specific flavor folder
+          path: android/app/build/outputs/apk/**/*.apk
