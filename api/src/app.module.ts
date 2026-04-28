@@ -20,6 +20,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { BullModule } from '@nestjs/bull'
 import { SupportModule } from './support/support.module'
 import { EventEmitterModule } from '@nestjs/event-emitter'
+import { PingController } from './ping.controller'
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
@@ -60,7 +61,7 @@ export class LoggerMiddleware implements NestMiddleware {
     BillingModule,
     SupportModule,
   ],
-  controllers: [],
+  controllers: [PingController],
   providers: [
     {
       provide: APP_GUARD,
